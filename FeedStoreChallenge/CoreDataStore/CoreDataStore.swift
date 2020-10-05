@@ -34,7 +34,7 @@ public class CoreDataStore : FeedStore{
     }
 
     public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-//        context.perform {
+        context.perform {
             do {
                 let managedCache = ManagedCache(context: self.context)
                 var managedFeeds = [ManagedFeed]()
@@ -56,7 +56,7 @@ public class CoreDataStore : FeedStore{
             catch{
                 completion(error)
             }
-//        }
+        }
 
     }
 
