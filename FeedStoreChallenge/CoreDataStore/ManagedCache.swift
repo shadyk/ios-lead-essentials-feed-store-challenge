@@ -18,8 +18,9 @@ extension ManagedCache {
         return managedFeeds.map{LocalFeedImage(id: $0.id, description: $0.descr, location: $0.location, url: URL(string:$0.url)!)}
     }
 
-    static func createNew(feed:[LocalFeedImage], timestamp: Date, context: NSManagedObjectContext){
-        cleanCurrentCache(in: context)
+    static func createNew(feed:[LocalFeedImage], timestamp: Date, context: NSManagedObjectContext) throws{
+        do {try cleanCurrentCache(in: context)}
+        catch{ throw error}
         let managedCache = ManagedCache(context: context)
         var managedFeeds = [ManagedFeed]()
         for localFeedImage in feed {
@@ -41,12 +42,13 @@ extension ManagedCache {
         return try context.fetch(request).first
     }
 
-    static func cleanCurrentCache(in context:NSManagedObjectContext){
+    static func cleanCurrentCache(in context:NSManagedObjectContext) throws{
         do{
             try getCurrentCache(in: context).map(context.delete)
+            try context.save()
         }
         catch{
-            print("error in cleaning \(error)")
+            throw error
         }
     }
 
