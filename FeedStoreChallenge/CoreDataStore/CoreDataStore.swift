@@ -5,7 +5,7 @@
 
 import CoreData
 
-public class CoreDataStore : FeedStore{
+open class CoreDataStore : FeedStore{
     enum ModelError : Error {
         case modelNotFound
     }
@@ -29,7 +29,7 @@ public class CoreDataStore : FeedStore{
 
     }
 
-    public func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+    open func deleteCachedFeed(completion: @escaping DeletionCompletion) {
         do  {
             try ManagedCache.cleanCurrentCache(in: self.context)
             completion(nil)
@@ -39,7 +39,7 @@ public class CoreDataStore : FeedStore{
         }
     }
 
-    public func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+    open func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
         do {
             try ManagedCache.createNew(feed: feed, timestamp: timestamp, context: self.context)
             try self.context.save()
@@ -51,7 +51,7 @@ public class CoreDataStore : FeedStore{
     }
 
 
-    public func retrieve(completion: @escaping RetrievalCompletion) {
+    open func retrieve(completion: @escaping RetrievalCompletion) {
         do {
             if let managedCache = try ManagedCache.getCurrentCache(in:context) {
                 completion(.found(feed: managedCache.localFeed, timestamp: managedCache.timestamp))

@@ -91,6 +91,13 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
         return sut
     }
 
+    private func makeFailableSUT() -> FeedStore {
+
+        let storeURL = URL(fileURLWithPath:"/dev/null")
+        let sut = try! FailableCoreDataStore(storeURL : storeURL, storeName: "FeedStore")
+        return sut
+    }
+
 }
 
 //  ***********************
@@ -101,21 +108,21 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 //
 //  ***********************
 
-//extension FeedStoreChallengeTests: FailableRetrieveFeedStoreSpecs {
+extension FeedStoreChallengeTests: FailableRetrieveFeedStoreSpecs {
+
+	func test_retrieve_deliversFailureOnRetrievalError() {
+		let sut = makeFailableSUT()
+
+		assertThatRetrieveDeliversFailureOnRetrievalError(on: sut)
+	}
+
+	func test_retrieve_hasNoSideEffectsOnFailure() {
+//		let sut = makeSUT()
 //
-//	func test_retrieve_deliversFailureOnRetrievalError() {
-////		let sut = makeSUT()
-////
-////		assertThatRetrieveDeliversFailureOnRetrievalError(on: sut)
-//	}
-//
-//	func test_retrieve_hasNoSideEffectsOnFailure() {
-////		let sut = makeSUT()
-////
-////		assertThatRetrieveHasNoSideEffectsOnFailure(on: sut)
-//	}
-//
-//}
+//		assertThatRetrieveHasNoSideEffectsOnFailure(on: sut)
+	}
+
+}
 
 //extension FeedStoreChallengeTests: FailableInsertFeedStoreSpecs {
 //
@@ -148,3 +155,22 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 //	}
 //
 //}
+
+class FailableCoreDataStore : CoreDataStore{
+    override func deleteCachedFeed(completion: @escaping DeletionCompletion) {
+        let error = NSError(domain: "", code: 0)
+        completion(error)
+    }
+
+    override func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
+        let error = NSError(domain: "", code: 0)
+        completion(error)
+    }
+
+    override func retrieve(completion: @escaping RetrievalCompletion) {
+        let error = NSError(domain: "", code: 0)
+        completion(.failure(error))
+    }
+
+
+}
