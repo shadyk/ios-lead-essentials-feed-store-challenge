@@ -78,18 +78,16 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 
     func test_storeSideEffects_runSerially() {
         		let sut = makeSUT()
-        
+
         		assertThatSideEffectsRunSerially(on: sut)
     }
 
     // - MARK: Helpers
 
     private func makeSUT() -> FeedStore {
+
         let storeURL = URL(fileURLWithPath:"/dev/null")
-//        let storeURL =  FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("FeedStore")
-print(storeURL)
         let sut = try! CoreDataStore(storeURL : storeURL, storeName: "FeedStore")
-        
         return sut
     }
 
