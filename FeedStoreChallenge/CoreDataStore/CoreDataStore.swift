@@ -64,27 +64,4 @@ public class CoreDataStore : FeedStore{
             completion(.failure(error))
         }
     }
-
-    //MARK: - HELPERS
-
-    //    private func insertCache(cache:MangagedCache) throws{
-    //        let context = container.viewContext
-    //        let entity = NSEntityDescription.entity(forEntityName: "Cache", in: context)!
-    //        let managedObj = NSManagedObject(entity: entity, insertInto: context)
-    //        managedObj.setValue(timestamp, forKeyPath: "timestamp")
-    //        managedObj.setValue(NSSet(array: feed), forKeyPath: "feed")
-    //        try context.save()
-    //    }
-    //
-    //    private func insertDetails(id:UUID,descr:String?,location:String?,url:String) throws{
-    //        let context = container.viewContext
-    //        let entity = NSEntityDescription.entity(forEntityName: "Feed", in: context)!
-    //        let managedObj = NSManagedObject(entity: entity, insertInto: context)
-    //
-    //        managedObj.setValue(id, forKeyPath: "id")
-    //        managedObj.setValue(descr, forKeyPath: "descr")
-    //        managedObj.setValue(location, forKeyPath: "location")
-    //        managedObj.setValue(url, forKeyPath: "url")
-    //        try context.save()
-    //    }
 }
