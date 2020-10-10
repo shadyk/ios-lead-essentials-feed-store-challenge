@@ -79,6 +79,7 @@ class FeedStoreIntegrationTests: XCTestCase {
         let storeURL =  FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask).first!.appendingPathComponent("FeedStore")
         print("storeURL \(storeURL)")
         let sut = try! CoreDataStore(storeURL : storeURL, storeName: "FeedStore")
+        trackForMemoryLeaks(sut)
         return sut
     }
     
@@ -93,4 +94,12 @@ class FeedStoreIntegrationTests: XCTestCase {
         try? FileManager.default.removeItem(at: storeURL)
     }
     
+}
+
+extension XCTestCase {
+    func trackForMemoryLeaks(_ instance: AnyObject, file: StaticString = #file, line: UInt = #line) {
+        addTeardownBlock { [weak instance] in
+            XCTAssertNil(instance, "Instance should have been deallocated. Potential memory leak.")
+        }
+    }
 }

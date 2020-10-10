@@ -95,10 +95,12 @@ class FeedStoreChallengeTests: XCTestCase, FeedStoreSpecs {
 
         let storeURL = URL(fileURLWithPath:"/dev/null")
         let sut = try! FailableCoreDataStore(storeURL : storeURL, storeName: "FeedStore")
+        trackForMemoryLeaks(sut)
         return sut
     }
 
 }
+
 
 //  ***********************
 //
@@ -133,9 +135,9 @@ extension FeedStoreChallengeTests: FailableInsertFeedStoreSpecs {
 	}
 
 	func test_insert_hasNoSideEffectsOnInsertionError() {
-//		let sut = makeSUT()
-//
-//		assertThatInsertHasNoSideEffectsOnInsertionError(on: sut)
+		let sut = makeFailableSUT()
+
+		assertThatInsertHasNoSideEffectsOnInsertionError(on: sut)
 	}
 
 }
