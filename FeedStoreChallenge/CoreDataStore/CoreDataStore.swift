@@ -30,38 +30,45 @@ open class CoreDataStore : FeedStore{
     }
 
     open func deleteCachedFeed(completion: @escaping DeletionCompletion) {
-        do  {
-            try ManagedCache.cleanCurrentCache(in: self.context)
-            completion(nil)
-        }
-        catch {
-            completion(error)
+        context.perform {
+            do  {
+                try ManagedCache.cleanCurrentCache(in: self.context)
+                completion(nil)
+            }
+            catch {
+                completion(error)
+            }
         }
     }
 
     open func insert(_ feed: [LocalFeedImage], timestamp: Date, completion: @escaping InsertionCompletion) {
-        do {
-            try ManagedCache.createNew(feed: feed, timestamp: timestamp, context: self.context)
-            try self.context.save()
-            completion(nil)
+        context.perform {
+            do {
+                try ManagedCache.createNew(feed: feed, timestamp: timestamp, context: self.context)
+                try self.context.save()
+                completion(nil)
+            }
+            catch{
+                completion(error)
+            }
         }
-        catch{
-            completion(error)
-        }
+
     }
 
 
     open func retrieve(completion: @escaping RetrievalCompletion) {
-        do {
-            if let managedCache = try ManagedCache.getCurrentCache(in:context) {
-                completion(.found(feed: managedCache.localFeed, timestamp: managedCache.timestamp))
-            }
-            else {
-                completion(.empty)
-            }
+        context.perform {
+            do {
+                if let managedCache = try ManagedCache.getCurrentCache(in:self.context) {
+                    completion(.found(feed: managedCache.localFeed, timestamp: managedCache.timestamp))
+                }
+                else {
+                    completion(.empty)
+                }
 
-        } catch {
-            completion(.failure(error))
+            } catch {
+                completion(.failure(error))
+            }
         }
     }
 }
