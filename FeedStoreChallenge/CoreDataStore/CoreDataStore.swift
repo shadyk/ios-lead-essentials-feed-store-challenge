@@ -19,13 +19,8 @@ open class CoreDataStore : FeedStore{
         guard let model = CoreDataStore.model else {
             throw ModelError.modelNotFound
         }
-        do {
-            container = try NSPersistentContainer.load(name: storeName, model: model, url:storeURL)
-            context = container.newBackgroundContext()
-        }
-        catch{
-            throw error
-        }
+        container = try NSPersistentContainer.load(name: storeName, model: model, url:storeURL)
+        context = container.newBackgroundContext()
 
     }
 
